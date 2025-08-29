@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563eb",
+              secondary: "#3b82f6",
+              success: "#10b981",
+              danger: "#ef4444",
+              warning: "#f59e0b",
+              info: "#06b6d4",
+              purple: "#a855f7",
+              pink: "#ec4899",
+              dark: "#1e293b",
+              light: "#f8fafc",
+              focus: "#1d4ed8",
+            },
+            animation: {
+              "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+              "bounce-slow": "bounce 2s infinite",
+              "fade-in-up": "fadeInUp 0.6s ease-out",
+              "fade-in-down": "fadeInDown 0.6s ease-out",
+              "fade-in": "fadeIn 0.5s ease-in",
+              "slide-in-right": "slideInRight 0.5s ease-out",
+              "slide-in-left": "slideInLeft 0.5s ease-out",
+              "progress-bar": "progressBar 1.5s ease-in-out",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              fadeInDown: {
+                "0%": { opacity: "0", transform: "translateY(-20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideInRight: {
+                "0%": { opacity: "0", transform: "translateX(20px)" },
+                "100%": { opacity: "1", transform: "translateX(0)" },
+              },
+              slideInLeft: {
+                "0%": { opacity: "0", transform: "translateX(-20px)" },
+                "100%": { opacity: "1", transform: "translateX(0)" },
+              },
+              progressBar: {
+                "0%": { width: "0%" },
+                "100%": { width: "100%" },
+              },
+              fadeIn: {
+                from: { opacity: "0", transform: "translateY(10px)" },
+                to: { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="text-gray-800">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+      <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toast-message"></span>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+      <!-- Header -->
+      <header class="mb-10 text-center animate-fade-in-down">
+        <h1 class="text-3xl sm-text-lg md:text-4xl font-bold text-primary mb-2">
+          Finance Tracker
+        </h1>
+        <p class="text-gray-600 sm-text-xs">
+          Track your income and expenses with ease
+        </p>
+      </header>
+
+      <!-- Summary Cards - Reordered as requested -->
+      <div class="grid grid-cols-1 md-grid-2 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Total Income Card (First) -->
+        <div
+          class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-success stat-card animate-fade-in-up"
+          style="animation-delay: 0.1s"
+        >
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-gray-500 text-sm">Total Income</p>
+              <h3
+                id="totalIncome"
+                class="text-2xl sm-text-base font-bold text-success counting"
+              >
+                $0.00
+              </h3>
+            </div>
+            <div class="p-3 float">
+              <i class="fa-solid fa-arrow-trend-up text-success text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Expenses Card (Second) -->
+        <div
+          class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-danger stat-card animate-fade-in-up"
+          style="animation-delay: 0.2s"
+        >
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-gray-500 text-sm">Total Expenses</p>
+              <h3
+                id="totalExpense"
+                class="text-2xl sm-text-base font-bold text-danger counting"
+              >
+                $0.00
+              </h3>
+            </div>
+            <div class="p-3 float" style="animation-delay: 0.3s">
+              <i class="fa-solid fa-arrow-trend-down text-danger text-xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance Card (Last) -->
+        <div
+          class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-primary stat-card animate-fade-in-up"
+          style="animation-delay: 0.3s"
+        >
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-gray-500 text-sm">Balance</p>
+              <h3
+                id="totalBalance"
+                class="text-2xl sm-text-base font-bold text-primary counting"
+              >
+                $0.00
+              </h3>
+            </div>
+            <div class="p-3 float" style="animation-delay: 0.4s">
+              <i class="fas fa-wallet text-primary text-xl"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column - Form -->
+        <div class="lg:col-span-2">
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-in-left"
+          >
+            <h2
+              class="text-2xl sm-text-lg font-bold text-gray-800 mb-6 flex items-center"
+            >
+              <i class="fas fa-plus-circle text-primary mr-2"></i>
+              <span id="formTitle">Add Transaction</span>
+            </h2>
+            <form id="transactionForm" class="space-y-4">
+              <input type="hidden" id="editId" value="" />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    for="description"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Description</label
+                  >
+                  <input
+                    type="text"
+                    id="description"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                    placeholder="Enter description"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="amount"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Amount ($)</label
+                  >
+                  <input
+                    type="number"
+                    id="amount"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                    placeholder="Enter amount"
+                    min="0"
+                    step="0.01"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    for="type"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Type</label
+                  >
+                  <select
+                    id="type"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                  >
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="category"
+                    class="block text-sm font-medium text-gray-700 mb-1"
+                    >Category</label
+                  >
+                  <select
+                    id="category"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                  >
+                    <option value="salary">Salary</option>
+                    <option value="freelance">Freelance</option>
+                    <option value="food">Food</option>
+                    <option value="transport">Transport</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="bills">Bills</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="date"
+                  class="block text-sm font-medium text-gray-700 mb-1"
+                  >Date</label
+                >
+                <input
+                  type="date"
+                  id="date"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                  required
+                />
+              </div>
+
+              <div class="flex space-x-4">
+                <button
+                  type="submit"
+                  id="submitButton"
+                  class="flex-1 bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-300 btn-animate"
+                >
+                  Add Transaction
+                </button>
+                <button
+                  type="button"
+                  id="cancelEditButton"
+                  class="hidden bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-4 rounded-lg transition duration-300 btn-animate"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Filter Controls -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-in-left"
+            style="animation-delay: 0.1s"
+          >
+            <h2
+              class="text-2xl sm-text-lg font-bold text-gray-800 mb-6 flex items-center"
+            >
+              <i class="fas fa-filter text-primary mr-2"></i> Filter & Search
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Type</label
+                >
+                <select
+                  id="filterType"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                >
+                  <option value="all">All Types</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Category</label
+                >
+                <select
+                  id="filterCategory"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="salary">Salary</option>
+                  <option value="freelance">Freelance</option>
+                  <option value="food">Food</option>
+                  <option value="transport">Transport</option>
+                  <option value="shopping">Shopping</option>
+                  <option value="entertainment">Entertainment</option>
+                  <option value="bills">Bills</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Date From</label
+                >
+                <input
+                  type="date"
+                  id="filterDateFrom"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Date To</label
+                >
+                <input
+                  type="date"
+                  id="filterDateTo"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Search</label
+                >
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search descriptions..."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-0 focus:border-focus"
+                />
+              </div>
+              <div class="flex items-end">
+                <button
+                  id="resetFilters"
+                  class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition duration-300 btn-animate flex items-center justify-center"
+                >
+                  <i class="fas fa-redo-alt mr-2"></i> Reset Filters
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 animate-slide-in-left"
+            style="animation-delay: 0.2s"
+          >
+            <div
+              class="flex justify-between items-center mb-6 sm-flex-col sm:items-start sm:space-y-2"
+            >
+              <h2
+                class="text-2xl sm-text-lg font-bold text-gray-800 flex items-center"
+              >
+                <i class="fas fa-history text-primary mr-2"></i> Recent
+                Transactions
+              </h2>
+              <div class="flex space-x-2 sm:space-x-1">
+                <button
+                  id="sortDate"
+                  class="px-3 py-1 bg-gray-200 text-gray-800 rounded sortable sm-text-xs"
+                >
+                  <i class="fas fa-calendar-alt mr-1"></i> Date
+                </button>
+                <button
+                  id="sortAmount"
+                  class="px-3 py-1 bg-gray-200 text-gray-800 rounded sortable sm-text-xs"
+                >
+                  <i class="fas fa-dollar-sign mr-1"></i> Amount
+                </button>
+                <button
+                  id="clearAllBtn"
+                  class="px-3 py-1 bg-danger hover:bg-red-700 text-white rounded btn-animate sm-text-xs"
+                >
+                  <i class="fas fa-trash-alt mr-1"></i> Clear All
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md-table-header sm-table-header"
+                    >
+                      Description
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md-table-header sm-table-header sm-hidden"
+                    >
+                      Category
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md-table-header sm-table-header"
+                    >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md-table-header sm-table-header"
+                    >
+                      Amount
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md-table-header sm-table-header"
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="transactionList"
+                  class="bg-white divide-y divide-gray-200"
+                >
+                  <!-- Transactions will be added here dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Charts and Stats -->
+        <div>
+          <!-- Income by Category Section -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-in-right"
+          >
+            <h2
+              class="text-2xl sm-text-lg font-bold text-gray-800 mb-6 flex items-center"
+            >
+              <i class="fas fa-chart-pie text-primary mr-2"></i> Income by
+              Category
+            </h2>
+
+            <div id="incomeByCategory" class="space-y-4">
+              <div class="text-center text-gray-500 py-4">
+                <i
+                  class="fas fa-file-invoice-dollar text-4xl text-gray-300 mb-3"
+                ></i>
+                <p>No income data yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expense by Category -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-in-right"
+            style="animation-delay: 0.1s"
+          >
+            <h2
+              class="text-2xl sm-text-lg font-bold text-gray-800 mb-6 flex items-center"
+            >
+              <i class="fas fa-chart-bar text-primary mr-2"></i> Expense by
+              Category
+            </h2>
+
+            <div id="categoryExpenses" class="space-y-4">
+              <div class="text-center text-gray-500 py-4">
+                <i class="fas fa-receipt text-4xl text-gray-300 mb-3"></i>
+                <p>No expense data yet</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Summary -->
+          <div
+            class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-slide-in-right"
+            style="animation-delay: 0.2s"
+          >
+            <h2
+              class="text-2xl sm-text-lg font-bold text-gray-800 mb-6 flex items-center"
+            >
+              <i class="fas fa-calendar-check text-primary mr-2"></i> Monthly
+              Summary
+            </h2>
+
+            <div class="flex justify-between mb-4">
+              <span class="text-gray-600 flex items-center">
+                <i class="fas fa-arrow-up text-success mr-2"></i> Income
+              </span>
+              <span id="monthlyIncome" class="font-semibold text-success"
+                >+$0.00</span
+              >
+            </div>
+
+            <div class="flex justify-between mb-4">
+              <span class="text-gray-600 flex items-center">
+                <i class="fas fa-arrow-down text-danger mr-2"></i> Expenses
+              </span>
+              <span id="monthlyExpenses" class="font-semibold text-danger"
+                >-$0.00</span
+              >
+            </div>
+
+            <div class="border-t border-gray-200 pt-4 flex justify-between">
+              <span class="font-medium flex items-center">
+                <i class="fas fa-scale-balanced text-primary mr-2"></i> Balance
+              </span>
+              <span id="monthlyBalance" class="font-bold text-primary"
+                >$0.00</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
