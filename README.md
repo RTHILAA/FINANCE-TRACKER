@@ -8,7 +8,7 @@ A modern, responsive web application for tracking personal income and expenses w
 
 We would appreciate it if you decide to use this project. Please include credit when using it. Thank you! 🙏
 
-## ✨ Features
+## ✨ Features :
 
 ### 🔧 Core Functionality
 - **➕ Add Transactions**: Record income and expenses with descriptions, amounts, categories, and dates
@@ -32,7 +32,7 @@ We would appreciate it if you decide to use this project. Please include credit 
 - **💵 Income**: Salary, Freelance
 - **💳 Expenses**: Food, Transport, Shopping, Entertainment, Bills, Other
 
-## 📁 File Structure
+## 📁 File Structure :
 
 ```
 finance-tracker/
@@ -42,7 +42,7 @@ finance-tracker/
 └── 📖 README.md          # Project documentation
 ```
 
-## 🛠️ Technologies Used
+## 🛠️ Technologies Used :
 
 - **🌐 HTML5**: Semantic markup structure
 - **🎨 CSS3**: Custom animations and responsive design
@@ -51,7 +51,7 @@ finance-tracker/
 - **🎯 Font Awesome**: Icon library for visual elements
 - **💾 Local Storage**: Browser-based data persistence
 
-## 🚀 Getting Started
+## 🚀 Getting Started :
 
 ### 📋 Prerequisites
 - A modern web browser (Chrome, Firefox, Safari, Edge)
@@ -90,7 +90,7 @@ finance-tracker/
 - **💰 By Amount**: Click the "Amount" button to sort by value
 - Click again to reverse the sort order
 
-## 🌟 Features in Detail
+## 🌟 Features in Detail :
 
 ### 📊 Summary Cards
 - **💵 Total Income**: Sum of all income transactions
@@ -110,14 +110,14 @@ finance-tracker/
 ### 💾 Data Persistence
 All transaction data is automatically saved to your browser's local storage, so your data persists between sessions.
 
-## 🌐 Browser Compatibility
+## 🌐 Browser Compatibility :
 
-- 🟢 Chrome 60+
-- 🟠 Firefox 55+
-- 🔵 Safari 12+
-- 🟦 Edge 79+
+-  Chrome 60+
+-  Firefox 55+
+-  Safari 12+
+-  Edge 79+
 
-## 🤝 Contributing
+## 🤝 Contributing :
 
 This is a standalone project. To modify:
 
@@ -125,7 +125,7 @@ This is a standalone project. To modify:
 2. **🎨 Styling**: Modify `style.css` for visual adjustments
 3. **⚡ Functionality**: Update `script.js` for feature enhancements
 
-## 📄 License
+## 📄 License :
 
 This project is open source and available under the MIT License.
 
