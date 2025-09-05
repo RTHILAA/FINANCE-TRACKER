@@ -133,6 +133,6 @@ This project is open source and available under the MIT License.
 
 Have questions or suggestions? Feel free to reach out:
 
-- **Author**: ANASS EL HARAZI
+- **Developer**: ANASS EL HARAZI
 - **Email**:  [anaswins35@gmail.com](mailto:anaswins35@gmail.com)
 - **LinkedIn**: [ANASS EL HARAZI](https://www.linkedin.com/in/anasselharazi/)
